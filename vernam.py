@@ -9,27 +9,26 @@ letter_vals = {
     'Z':25
     } 
 
-#returns the first key whos value matches the provided value.
-def get_key(letter_value):
-    for letter,val in letter_vals.items():
-        if val == letter_value:
-            return letter
+#returns the key that matches provided value
+def get_key(val:int):
+    return list(letter_vals.keys())[list(letter_vals.values()).index(val)]
 
 #remove non-alphabetic characters from message
-def process_message_string(message:string):
-    message = message.upper()
+def process_message_string(message:str):
+    # message = message.upper()
     for char in message:
-        if char not in string.ascii_uppercase:
+        if char not in string.ascii_letters:
             message = message.replace(char, "")
     return message
 
 #generates key of same length as processed message
-def generate_key(msg:string):
+def generate_key(msg:str):
     key = ""
     file = open("key.dat","w")
     for char in msg:
-        key+=(random.choice(string.ascii_uppercase))
+        key+=(random.choice(string.ascii_letters))
     file.write(key)
+    file.close()
     return key
 
 def encrypt():
@@ -40,13 +39,39 @@ def encrypt():
     print("")
     print("the key is:\t",key)
 
-    #perform XOR operation on each message and key letter pairs
     for i in range(len(msg)):
-        substitution = letter_vals[msg[i]] ^ letter_vals[key[i]]
-        substitution = get_key(substitution)
-        encrypted_msg += substitution
-    
+        xor = ord(msg[i]) ^ ord(key[i])
+        encrypted_msg+= chr(xor)
+
+    #perform XOR operation on each message and key letter pairs
+    # for i in range(len(msg)):
+    #     xor = (letter_vals[msg[i]] ^ letter_vals[key[i]])
+    #     encrypted_msg += get_key(xor)
+
+    file = open("ciphertext.dat", "w")
+    file.write(encrypted_msg)
+    file.close()
     print ("Encrypted message:\t",encrypted_msg)
+
+def decipher():
+    msg_file = open("ciphertext.dat", "r")
+    key_file = open("key.dat", "r")
+    msg = msg_file.read()
+    key = key_file.read()
+
+    decipher_msg = ""
+
+    for i in range(len(msg)):
+        xor = ord(msg[i]) ^ ord(key[i])
+        decipher_msg+= chr(xor)
+
+    # for i in range(len(msg)):
+    #     xor = (letter_vals[msg[i]] ^ letter_vals[key[i]])
+    #     decipher_msg += get_key(xor)
+    
+    msg_file.close()
+    key_file.close()
+    print("The deciphered message is:\t",decipher_msg)
 
 def show_menu():
     ans = ""
@@ -57,7 +82,7 @@ def show_menu():
         if ans == 1:
             encrypt()
         elif ans == 2:
-            break
+            decipher()
         elif ans != 0:
             print("\n\033[93m"+ str(ans), "is not a valid input\033[0m")
             print("\nWhat do you want to do?")
