@@ -1,23 +1,10 @@
 import string
 import random
 
-#assigned letter values for XOR operatio
-letter_vals = {
-    'A':0, 'B':1, 'C':2, 'D':3, 'E':4, 'F':5, 'G':6, 'H':7, 'I':8,
-    'J':9, 'K':10, 'L':11, 'M':12, 'N':13, 'O':14, 'P':15, 'Q':16,
-    'R':17, 'S':18, 'T':19, 'U':20, 'V':21, 'W':22, 'X':23, 'Y':24,
-    'Z':25
-    } 
-
-#returns the key that matches provided value
-def get_key(val:int):
-    return list(letter_vals.keys())[list(letter_vals.values()).index(val)]
-
 #remove non-alphabetic characters from message
 def process_message_string(message:str):
-    # message = message.upper()
     for char in message:
-        if char not in string.ascii_letters:
+        if char not in string.ascii_letters and char not in string.digits:
             message = message.replace(char, "")
     return message
 
@@ -26,7 +13,7 @@ def generate_key(msg:str):
     key = ""
     file = open("key.dat","w")
     for char in msg:
-        key+=(random.choice(string.ascii_letters))
+        key+=chr(random.randint(48,125))
     file.write(key)
     file.close()
     return key
@@ -42,11 +29,6 @@ def encrypt():
     for i in range(len(msg)):
         xor = ord(msg[i]) ^ ord(key[i])
         encrypted_msg+= chr(xor)
-
-    #perform XOR operation on each message and key letter pairs
-    # for i in range(len(msg)):
-    #     xor = (letter_vals[msg[i]] ^ letter_vals[key[i]])
-    #     encrypted_msg += get_key(xor)
 
     file = open("ciphertext.dat", "w")
     file.write(encrypted_msg)
@@ -64,10 +46,6 @@ def decipher():
     for i in range(len(msg)):
         xor = ord(msg[i]) ^ ord(key[i])
         decipher_msg+= chr(xor)
-
-    # for i in range(len(msg)):
-    #     xor = (letter_vals[msg[i]] ^ letter_vals[key[i]])
-    #     decipher_msg += get_key(xor)
     
     msg_file.close()
     key_file.close()
