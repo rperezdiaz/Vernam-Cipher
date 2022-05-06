@@ -1,3 +1,8 @@
+###
+# vernam.py
+# Author: Rey F. Pérez Díaz 
+###
+
 import string
 import random
 
@@ -18,6 +23,8 @@ def generate_key(msg:str):
     file.close()
     return key
 
+#encrypts a message with a randomly generated key
+#saves the key to key.dat
 def encrypt():
     msg = process_message_string(input("Enter plaintext message: "))
     key = generate_key(msg)
@@ -35,6 +42,7 @@ def encrypt():
     file.close()
     print ("Encrypted message:\t",encrypted_msg)
 
+#deciphers message using key.dat ciphertext.dat
 def decipher():
     msg_file = open("ciphertext.dat", "r")
     key_file = open("key.dat", "r")
@@ -51,6 +59,7 @@ def decipher():
     key_file.close()
     print("The deciphered message is:\t",decipher_msg)
 
+#shows terminal-based menu
 def show_menu():
     ans = ""
     while ans != 0:
@@ -67,6 +76,7 @@ def show_menu():
             print("1. ENCRYPT a message\n2. DECIPHER a message\n0. EXIT")
             ans = int(input("Enter option number: "))
 
+#Program Entry point
 def main():
     show_menu()
 
